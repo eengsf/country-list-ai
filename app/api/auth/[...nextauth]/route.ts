@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import type { NextAuthOptions } from "next-auth";
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -11,32 +12,26 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: "jwt",
-    maxAge: 60 * 60, 
   },
   callbacks: {
-    async session({ session, token }: any) {
-      if (session?.user) {
-        session.user.theme = token.theme || "light";
+    async session({ session, token }) {
+      if (session.user) {
+        (session.user as any).theme = token.theme || "light"; // ✅ Hindari error TypeScript
         session.user.image = token.picture;
       }
       return session;
     },
-    async jwt({ token, user, account }: any) {
+    async jwt({ token, user }) {
       if (user) {
-        token.theme = user.theme || "light";
-      }
-      if (account?.provider === "google") {
-        token.picture = user?.image;
+        token.theme = (user as any).theme || "light"; // ✅ Hindari error TypeScript
       }
       return token;
     },
   },
-  pages: {
-    signIn: "/signin", 
-  },
-  secret: process.env.NEXTAUTH_SECRET, 
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 const handler = NextAuth(authOptions);
 
+// ✅ Pastikan ekspor seperti ini di App Router
 export { handler as GET, handler as POST };
