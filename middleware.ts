@@ -2,7 +2,7 @@ import { withAuth } from "next-auth/middleware";
 
 export default withAuth({
   pages: {
-    signIn: "/signin", // Redirect ke login jika belum login
+    signIn: "/", // Redirect ke login jika belum login
   },
 });
 
