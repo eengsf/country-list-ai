@@ -7,5 +7,5 @@ export default withAuth({
 });
 
 export const config = {
-  matcher: ["/dashboard", "/"], // Middleware hanya berlaku di /dashboard
+  matcher: ["/dashboard"], // Middleware hanya berlaku di /dashboard
 };
